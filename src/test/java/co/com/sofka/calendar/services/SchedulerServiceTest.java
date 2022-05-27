@@ -38,14 +38,17 @@ class SchedulerServiceTest {
         var startDate = LocalDate.of(2022, 1, 1);
 
         Program program = getProgramDummy();
-
         Mockito.when(repository.findById(programId)).thenReturn(Mono.just(program));
+
         //TODO: hacer una subscripción de el servicio reactivo
         Flux<ProgramDate> response = schedulerService.generateCalendar(programId, startDate);
+        Flux<String> json = Flux.just(getSnapResult());
 
-        StepVerifier.create(response).expectNextCount(13L).expectComplete();//TODO: hacer de otro modo - modificado
-        Flux<String> newJson = Flux.just(getSnapResult());
-        StepVerifier.create(newJson).expectNext(new Gson().toJson(response)).expectComplete(); //TODO: hacer de otro modo - modificado
+        //TODO: hacer de otro modo - modificado
+        StepVerifier.create(response).expectNextCount(13L).expectComplete();
+
+        //TODO: hacer de otro modo - modificado
+        StepVerifier.create(json).expectNext(new Gson().toJson(response)).expectComplete();
         Mockito.verify(repository).findById(programId);
     }
 
@@ -54,17 +57,16 @@ class SchedulerServiceTest {
     void programNoFound() {
         var programId = "xxxx";
         var startDate = LocalDate.of(2022, 1, 1);
-
         Mockito.when(repository.findById(programId)).thenReturn(Mono.empty());
 
+        //TODO: hacer una subscripción de el servicio reactivo - completado
+        Flux<ProgramDate> response = schedulerService.generateCalendar(programId, startDate);
+
         //TODO: hacer de otro modo
-        var exception = Assertions.assertThrows(RuntimeException.class, () -> {
-            schedulerService.generateCalendar(programId, startDate);//TODO: hacer una subscripción de el servicio reactivo
-
-        });
-        Assertions.assertEquals("El programa academnico no existe", exception.getMessage());//TODO: hacer de otro modo
+        StepVerifier.create(response).verifyError(RuntimeException.class);
+        StepVerifier.create(response)
+                .verifyErrorMessage("El programa academico no existe");
         Mockito.verify(repository).findById(programId);
-
     }
 
     //no tocar
