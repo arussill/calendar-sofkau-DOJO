@@ -1,5 +1,5 @@
 # calendar-sofkau-DOJO
-Grupo 8
+Grupo 13
 
 # Integrantes
 
