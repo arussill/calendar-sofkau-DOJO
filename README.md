@@ -1,4 +1,4 @@
-# calendar-sofkau-DOJO
+# calendar-sofkau-DOJO nivel 1
 Grupo 13
 
 # Integrantes
