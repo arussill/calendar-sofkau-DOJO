@@ -26,7 +26,7 @@ public class SchedulerService {
     private ProgramRepository programRepository;
 
     //TODO: deben retornar un flux de programDate Flux<ProgramDate>
-    public List<ProgramDate> generateCalendar(String programId, LocalDate startDate) {
+    public Flux<ProgramDate> generateCalendar(String programId, LocalDate startDate) {
         var endDate = new AtomicReference<>(LocalDate.from(startDate));
         final AtomicInteger[] pivot = {new AtomicInteger()};
         final int[] index = {0};
@@ -39,7 +39,7 @@ public class SchedulerService {
                 .map(toProgramDate(startDate, endDate, pivot[0], index))
                 .switchIfEmpty(Mono.error(new RuntimeException("El programa academico no existe")));
 
-        return (List<ProgramDate>) result;
+        return (Flux<ProgramDate>) result;
     }
 
     //No tocar
